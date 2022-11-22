@@ -1,56 +1,91 @@
-import React from 'react';
-import { Button, StyleSheet, Text, View, Dimensions } from 'react-native';
 
-function Link(props) {
-  return <Text {...props} accessibilityRole="link" style={StyleSheet.compose(styles.link, props.style)} />;
+import { StyleSheet,  TouchableOpacity, Text, View } from 'react-native';
+import {styles} from'./styles.js';
+import {firebaseConfig, app, auth, firestore} from './firebaseSetup.js';
+import {SignInScreen} from './loginScreens.js';
+import { NavigationContainer} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {HomeScreen} from './homeScreen.js';
+import {LoadingScreen} from './loadingscreen.js';
+import { getAuth, onAuthStateChanged, User, signOut  } from 'firebase/auth';
+import React, { useState, useEffect } from 'react';
+
+const Stack = createNativeStackNavigator();
+
+const userContext = React.createContext(undefined);
+
+function AuthStack(){
+  //creating a navigation stack that is only accessed when user is logged out
+  return(
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Sign-In" >
+          <Stack.Screen name="Sign-In" component={SignInScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+  )
 }
 
-function App() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Welcome to React Native for Web</Text>
-      </View>
-      <Text style={styles.text}>
-        This starter project enables you to build web application using React Native module. .
-      </Text>
-      <Text style={styles.text}>
-        Built with <Link href="https://github.com/facebook/create-react-app">Create React App</Link> and{' '}
-        <Link href="https://github.com/necolas/react-native-web">React Native for Web</Link>
-      </Text>
-      <Button onPress={() => {}} title="Example button" />
-    </View>
-  );
+function LoadingStack(){
+  return(
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Loading'>
+        <Stack.Screen name='Loading' component={LoadingScreen}>
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
-let ScreenHeight = Dimensions.get('window').height;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: ScreenHeight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
-  },
-  header: {
-    padding: 20
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: '1.5rem',
-    marginVertical: '1em',
-    textAlign: 'center'
-  },
-  text: {
-    lineHeight: '1.5em',
-    fontSize: '1.125rem',
-    marginVertical: '1em',
-    textAlign: 'center'
-  },
-  link: {
-    color: '#1B95E0'
-  },
-  code: {
-    fontFamily: 'monospace, monospace'
-  }
-});
-export default App;
+
+
+function UserStack(){
+  //creating a navigation stack that is only accessed when user is logged out
+  return(
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home" screenOptions={({navigation}) => ({
+             headerRight: () => (<TouchableOpacity activeOpacity={0.8} 
+              onPress={() => signOut(auth)}
+              style={styles.touchableOpacityProfile}>
+               <Text style={styles.logoutText}>Logout</Text> 
+              </TouchableOpacity>)
+          })}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+  )
+}
+
+function useAuthentication() {
+  const [user, setUser] = React.useState(undefined);
+
+  React.useEffect(() => {
+    const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        setUser(user);
+      } else {
+        // User is signed out
+        setUser(null);
+      }
+    });
+
+    return unsubscribeFromAuthStatuChanged;
+  }, []);
+
+  return {
+    user
+  };
+}
+
+
+
+export default function App() {
+  const { user } = useAuthentication();
+
+
+  return user===undefined ? <LoadingStack/> : user===null ? <AuthStack/> : <userContext.Provider value={user}><UserStack /></userContext.Provider>
+ // return <LoadingStack/>
+
+}
+
+export {userContext};
