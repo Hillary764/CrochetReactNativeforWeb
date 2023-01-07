@@ -4,8 +4,8 @@ import {styles} from'./styles.js';
 import { useFocusEffect } from '@react-navigation/native';
 import {firebaseConfig, app, auth, firestore} from './firebaseSetup.js';
 
-import React, { useState, useEffect, useReducer, useRef } from 'react';
-import { setDoc, doc, addDoc, getDocs, deleteDoc, collection, onSnapshot, query, limit, orderBy } from "firebase/firestore"; 
+import React, { useState, useReducer } from 'react';
+import { setDoc, doc, addDoc, getDocs, deleteDoc, collection, onSnapshot, query} from "firebase/firestore"; 
 import {userContext} from './App.js';
 import {Counter, Separator} from './counters.js';
 import {OpenProject} from './openProject.js';
@@ -184,6 +184,7 @@ function HomeScreen({navigation}){
 
 
   function sidebarSlide(){
+    //console.log("sidebar should pop up now");
     if(sidebarShown.value == 0){
       // Animated.timing(sidebarAnim, {
       //   toValue: -325,
@@ -423,7 +424,7 @@ function HomeScreen({navigation}){
     </Animated.View>
 
 
-    <Animated.View style={[styles.mainAreaTests, mainStyle, {top: flatlistTop,}]}>
+    <Animated.View style={[styles.mainAreaTests, {top: flatlistTop,}]}>
       <View style={{backgroundColor:'#f7ebfc'}}>
         
         <FlatList

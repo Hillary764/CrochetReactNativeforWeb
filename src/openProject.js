@@ -23,7 +23,7 @@ const OpenProject = (props) => {
    
     const user = React.useContext(userContext);
 
-    useFocusEffect(React.useCallback(() => {
+    useEffect(() => {
         let colRef = collection(firestore, "Users", user.uid, "Projects", item.key, "Counters");
         
         const unsubscribe = onSnapshot(colRef, (docs) => {
@@ -46,10 +46,10 @@ const OpenProject = (props) => {
           );
     
       return () => unsubscribe();
-    }, []));
+    }, []);
 
 
-    useFocusEffect(React.useCallback(() => {
+    useEffect(() => {
         let colRef = collection(firestore, "Users", user.uid, "Projects", item.key, "Notes");
         
         const unsubscribe = onSnapshot(colRef, (docs) => {
@@ -72,21 +72,7 @@ const OpenProject = (props) => {
           );
     
       return () => unsubscribe();
-    }, []));
-
-    // useFocusEffect(React.useCallback(() => {
-    //     opacity.value = withTiming(1, { duration: 300 });
-
-    //     return () => {
-    //       opacity.value = withTiming(0, { duration: 400 });
-    //     }
-    // }, []));
-
-    // const animatedStyle = useAnimatedStyle(() => {
-    //     return {
-    //       opacity: opacity.value,
-    //     };
-    //   });
+    }, []);
 
   
 
@@ -118,7 +104,7 @@ const OpenProject = (props) => {
     }
 
     return(
-        <Animated.View style={[{flex: 1, paddingHorizontal: 5}]} entering={ZoomIn}>
+        <View style={[{flex: 1, paddingHorizontal: 5}]}>
             <Text style={styles.projectTitleText}>{name}</Text>
         
              <FlatList
@@ -150,7 +136,7 @@ const OpenProject = (props) => {
                 onPress={() => addNote()}>
                 <Text style={styles.paragraph}>Add Note</Text>
             </TouchableOpacity>
-      </Animated.View>
+      </View>
     );
     
 }

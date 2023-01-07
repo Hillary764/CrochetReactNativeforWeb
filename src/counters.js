@@ -7,6 +7,7 @@ import { GoogleAuthProvider, signInWithPopup, signInWithCredential , onAuthState
 import React, { useState, useEffect } from 'react';
 import { setDoc, doc, addDoc, deleteDoc, getDoc, collection,updateDoc, onSnapshot, query, limit, orderBy } from "firebase/firestore"; 
 import {userContext} from './App.js';
+import Animated, { useSharedValue, useAnimatedStyle, SlideInUp } from "react-native-reanimated";
 
 
 const Separator = () => (
@@ -158,7 +159,8 @@ async function zeroOut(){
   return(
     <View
      key={item.key}
-     style={styles.container}>
+     style={styles.container}
+     >
         <View>
       {buildName()}
       </View>

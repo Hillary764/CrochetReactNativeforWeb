@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 
 const styles = StyleSheet.create({
@@ -46,17 +46,19 @@ const styles = StyleSheet.create({
 
     mainAreaTests: {
       backgroundColor: '#f7ebfc',
-      // alignItems: 'center',
-      justifyContent: 'space-around',  
+      alignItems: 'center',
+      justifyContent: 'center',  
       alignSelf: "stretch",
       height: "100%",
+      width: "100%",
       alignContent: "start",
+      
     },
 
     mainAreaFlatlistTests: {
       position: "absolute",
-      
-      left: 10,
+      alignSelf: "center",
+      // left: 10,
     },
 
       touchableOpacityProfile: {
