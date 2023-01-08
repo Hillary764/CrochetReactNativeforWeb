@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
       flex: 3,
       backgroundColor: '#f7ebfc',
       alignItems: 'center',
-      justifyContent: 'space-around',  
+      //justifyContent: 'space-around',  
       alignSelf: "stretch",
     },
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#f7ebfc',
       alignItems: 'center',
       justifyContent: 'center',  
-      alignSelf: "stretch",
+      //alignSelf: "stretch",
       height: "100%",
       width: "100%",
       alignContent: "start",
@@ -57,7 +57,9 @@ const styles = StyleSheet.create({
 
     mainAreaFlatlistTests: {
       position: "absolute",
-      alignSelf: "center",
+     // alignSelf: "center",
+      width: "100%",
+      
       // left: 10,
     },
 

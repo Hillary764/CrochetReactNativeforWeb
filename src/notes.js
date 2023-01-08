@@ -1,9 +1,7 @@
 
-import { StyleSheet,  TextInput, TouchableOpacity, FlatList, Modal, Image, Text, View } from 'react-native';
+import { TextInput, TouchableOpacity, Text, View } from 'react-native';
 import {styles} from'./styles.js';
-import { useFocusEffect } from '@react-navigation/native';
-import {firebaseConfig, app, auth, firestore} from './firebaseSetup.js';
-import { GoogleAuthProvider, signInWithPopup, signInWithCredential , onAuthStateChanged, User} from 'firebase/auth';
+import {firestore} from './firebaseSetup.js';
 import React, { useState, useEffect } from 'react';
 import { setDoc, doc, addDoc, deleteDoc, getDoc, collection,updateDoc, onSnapshot, query, limit, orderBy } from "firebase/firestore"; 
 import {userContext} from './App.js';
@@ -42,7 +40,7 @@ const Note = (props) => {
             placeholder="Place Notes Here"
             />
 
-
+            <Separator/>
             <TouchableOpacity style={styles.addCounterButton}
         onPress={() => {
           saveNote();

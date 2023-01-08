@@ -424,8 +424,8 @@ function HomeScreen({navigation}){
     </Animated.View>
 
 
-    <Animated.View style={[styles.mainAreaTests, {top: flatlistTop,}]}>
-      <View style={{backgroundColor:'#f7ebfc'}}>
+    <Animated.View style={[styles.mainAreaTests, /*{top: flatlistTop,}*/]}>
+      <View style={{backgroundColor:'#f7ebfc', width: "100%", justifyContent: "center",}}>
         
         <FlatList
         //this builds a scrollable list of the items
@@ -435,7 +435,8 @@ function HomeScreen({navigation}){
              renderItem={({item}) => <OpenProject item={item}></OpenProject>}
              keyExtractor={(item) => item.key.toString()}
              extraData={updateFlatlist}
-             style={[styles.mainAreaFlatlistTests, {height: flatlistHeight}]}
+             columnWrapperStyle={{justifyContent: 'center', alignContent: "center"}}
+             style={[styles.mainAreaFlatlistTests, {height: flatlistHeight, }]}
           
         />
         </View>

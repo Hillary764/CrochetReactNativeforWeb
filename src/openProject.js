@@ -1,15 +1,12 @@
 
-import { StyleSheet,  TextInput, TouchableOpacity, FlatList, Modal, Image, Text, View } from 'react-native';
+import { TouchableOpacity, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import {styles} from'./styles.js';
-import { useFocusEffect } from '@react-navigation/native';
-import {firebaseConfig, app, auth, firestore} from './firebaseSetup.js';
-import { GoogleAuthProvider, signInWithPopup, signInWithCredential , onAuthStateChanged, User} from 'firebase/auth';
+import {firestore} from './firebaseSetup.js';
 import React, { useState, useEffect } from 'react';
-import { setDoc, doc, addDoc, deleteDoc, getDoc, collection,updateDoc , onSnapshot, query, limit, orderBy } from "firebase/firestore"; 
+import { addDoc, collection, onSnapshot, query, limit, orderBy } from "firebase/firestore"; 
 import {userContext} from './App.js';
 import {Counter, Separator} from './counters.js';
 import {Note} from './notes.js';
-import Animated, { Layout, useSharedValue, useAnimatedStyle, withTiming, ZoomIn } from "react-native-reanimated";
 
 
 
@@ -18,8 +15,8 @@ const OpenProject = (props) => {
     const [name, setName] = useState(item.name);
     const [countersList, setCountersList] = useState(item.counters);
     const [notesList, setNotesList] = useState([]);
-    
-    //const opacity = useSharedValue(1);
+    const { height, width } = useWindowDimensions();
+    const [projectWidth, setProjectWidth] = useState(200);
    
     const user = React.useContext(userContext);
 
@@ -74,7 +71,9 @@ const OpenProject = (props) => {
       return () => unsubscribe();
     }, []);
 
-  
+    useEffect(() => {
+        setProjectWidth(Math.min(width, 200));
+    }, [width]);
 
     async function addCounter(){
         try{
@@ -104,7 +103,7 @@ const OpenProject = (props) => {
     }
 
     return(
-        <View style={[{flex: 1, paddingHorizontal: 5}]}>
+        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth}]}>
             <Text style={styles.projectTitleText}>{name}</Text>
         
              <FlatList
