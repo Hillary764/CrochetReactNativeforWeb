@@ -112,7 +112,7 @@ const OpenProject = (props) => {
     }
 
     return(
-        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth, height: "100%"}, 
+        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth,}, 
             index>0?{borderLeftWidth: 5, borderStyle: "dotted", borderColor: '#c094d1'}:{borderWidth: 0}]}
         onLayout={(event) => {changeNumCounterColumns(event.nativeEvent.layout)}}>
             <Text style={styles.projectTitleText}>{name}</Text>
