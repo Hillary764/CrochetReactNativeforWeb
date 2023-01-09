@@ -159,7 +159,7 @@ async function zeroOut(){
   return(
     <View
      key={item.key}
-     style={styles.container}
+     style={[styles.container, {width: 160, alignSelf: 'center', }]}
      >
         <View>
       {buildName()}

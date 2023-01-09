@@ -37,7 +37,6 @@ function binarySearch(list, item, min, max){
 
 function HomeScreen({navigation}){
     const [openProjectList, setOpenProjectList] = useState([]);
-    const [updateFlatlist, setUpdateFlatlist] = useState(true);
     const [projectList, updateProjectList] = useReducer(reducer, []);
 
     const { height, width } = useWindowDimensions();
@@ -176,21 +175,10 @@ function HomeScreen({navigation}){
     };
   });
 
-  const mainStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: openItemLoc.value }]
-    };
-  });
-
 
   function sidebarSlide(){
     //console.log("sidebar should pop up now");
     if(sidebarShown.value == 0){
-      // Animated.timing(sidebarAnim, {
-      //   toValue: -325,
-      //   useNativeDriver: false,
-      //   duration: 3000,
-      // }).start();
       sidebarShown.value = withSpring(-400);
       openItemLoc.value = withTiming(10);
     }
@@ -409,8 +397,7 @@ function HomeScreen({navigation}){
                 </View>
     </Modal>
 
-    <Animated.View style={[styles.sidebar, {width: sidebarWidth, }, sideStyle]}> 
-        <Text>Sidebar</Text>        
+    <Animated.View style={[styles.sidebar, {width: sidebarWidth, }, sideStyle]}>        
         <FlatList
         //this builds a scrollable list of the items
              data={projectList}
@@ -432,10 +419,8 @@ function HomeScreen({navigation}){
              data={openProjectList}
              numColumns={numColumns}
              key={numColumns}
-             renderItem={({item}) => <OpenProject item={item}></OpenProject>}
+             renderItem={({item, index}) => <OpenProject item={item} index={index}></OpenProject>}
              keyExtractor={(item) => item.key.toString()}
-             extraData={updateFlatlist}
-             columnWrapperStyle={{justifyContent: 'center', alignContent: "center"}}
              style={[styles.mainAreaFlatlistTests, {height: flatlistHeight, }]}
           
         />

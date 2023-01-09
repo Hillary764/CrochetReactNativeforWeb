@@ -33,7 +33,7 @@ const Note = (props) => {
         <View
         style={styles.container}>
             <TextInput
-            style={[styles.paragraph, {height: 300, width: "100%",}]}
+            style={[styles.paragraph, {height: 300, width: "90%",}]}
             multiline={true}
             onChangeText={text => setNoteText(text)}
             value={noteText}

@@ -12,11 +12,14 @@ import {Note} from './notes.js';
 
 const OpenProject = (props) => {
     const item = props.item;
+    const index = props.index;
     const [name, setName] = useState(item.name);
     const [countersList, setCountersList] = useState(item.counters);
     const [notesList, setNotesList] = useState([]);
     const { height, width } = useWindowDimensions();
     const [projectWidth, setProjectWidth] = useState(200);
+
+    const [numCounterColumns, setNumCounterColumns] = useState(1);
    
     const user = React.useContext(userContext);
 
@@ -75,6 +78,12 @@ const OpenProject = (props) => {
         setProjectWidth(Math.min(width, 200));
     }, [width]);
 
+    function changeNumCounterColumns(layout) {
+        const {width} = layout;
+        console.warn(width);
+        setNumCounterColumns(Math.floor(width/160));
+    }
+
     async function addCounter(){
         try{
           await addDoc(collection(firestore, "Users", user.uid, "Projects", item.key,"Counters"), {
@@ -103,14 +112,19 @@ const OpenProject = (props) => {
     }
 
     return(
-        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth}]}>
+        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth, height: "100%"}, 
+            index>0?{borderLeftWidth: 5, borderStyle: "dotted", borderColor: '#c094d1'}:{borderWidth: 0}]}
+        onLayout={(event) => {changeNumCounterColumns(event.nativeEvent.layout)}}>
             <Text style={styles.projectTitleText}>{name}</Text>
         
              <FlatList
                 data={countersList}
                 renderItem={({item}) => <Counter item={item}></Counter>}
                 keyExtractor={(item) => item.key.toString()}
-                listKey={item.key.toString()}>
+                numColumns={numCounterColumns}
+                key={item.key.toString()+numCounterColumns.toString()}
+                listKey={item.key.toString()+numCounterColumns.toString()}
+                >
                 
              </FlatList>
 
