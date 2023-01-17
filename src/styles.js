@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
       //alignSelf: "stretch",
       height: "100%",
       width: "100%",
-      alignContent: "start",
+      //alignContent: "start",
       
     },
 
     mainAreaFlatlistTests: {
       position: "absolute",
-     // alignSelf: "center",
+      //alignSelf: "center",
       width: "100%",
       
       // left: 10,

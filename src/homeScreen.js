@@ -419,7 +419,7 @@ function HomeScreen({navigation}){
              data={openProjectList}
              numColumns={numColumns}
              key={numColumns}
-             renderItem={({item, index}) => <OpenProject item={item} index={index}></OpenProject>}
+             renderItem={({item, index}) => <OpenProject item={item} index={index} columns={numColumns}></OpenProject>}
              keyExtractor={(item) => item.key.toString()}
              style={[styles.mainAreaFlatlistTests, {height: flatlistHeight, }]}
           

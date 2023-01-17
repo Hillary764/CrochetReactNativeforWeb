@@ -13,6 +13,8 @@ import {Note} from './notes.js';
 const OpenProject = (props) => {
     const item = props.item;
     const index = props.index;
+    const columns = props.columns
+
     const [name, setName] = useState(item.name);
     const [countersList, setCountersList] = useState(item.counters);
     const [notesList, setNotesList] = useState([]);
@@ -80,7 +82,7 @@ const OpenProject = (props) => {
 
     function changeNumCounterColumns(layout) {
         const {width} = layout;
-        console.warn(width);
+        console.warn("Width of single project: ", width);
         setNumCounterColumns(Math.floor(width/160));
     }
 
@@ -113,7 +115,7 @@ const OpenProject = (props) => {
 
     return(
         <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth,}, 
-            index>0?{borderLeftWidth: 5, borderStyle: "dotted", borderColor: '#c094d1'}:{borderWidth: 0}]}
+            index>0&&columns>1?{borderLeftWidth: 5, borderStyle: "dotted", borderColor: '#c094d1'}:{borderWidth: 0}]}
         onLayout={(event) => {changeNumCounterColumns(event.nativeEvent.layout)}}>
             <Text style={styles.projectTitleText}>{name}</Text>
         
