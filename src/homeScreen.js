@@ -5,7 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import {firebaseConfig, app, auth, firestore} from './firebaseSetup.js';
 
 import React, { useState, useReducer } from 'react';
-import { setDoc, doc, addDoc, getDocs, deleteDoc, collection, onSnapshot, query} from "firebase/firestore"; 
+import { setDoc, doc, addDoc, updateDoc, getDocs, deleteDoc, collection, onSnapshot, query} from "firebase/firestore"; 
 import {userContext} from './App.js';
 import {Counter, Separator} from './counters.js';
 import {OpenProject} from './openProject.js';
@@ -54,12 +54,11 @@ function HomeScreen({navigation}){
     const [newProjectName, setNewProjectName] = useState("Untitled");
     const user = React.useContext(userContext);
 
+    const colRef = collection(firestore, "Users", user.uid, "Projects");
+    const [q, setQ] = useState(query(colRef));
+
     useFocusEffect(React.useCallback(() => {
 
-        let colRef = collection(firestore, "Users", user.uid, "Projects");
-        let q = query(colRef);
-      
-        
         const unsubscribe = onSnapshot(q, (docs) => {
           let mydl = [];
 
@@ -69,6 +68,13 @@ function HomeScreen({navigation}){
               let data = item.data();
 
               console.log("Item found:", item.id, item.data());
+
+              if(!("createdAt" in data)){
+                console.log("there was no created at time here!");
+                fixDoc(doc(firestore, "Users", user.uid, "Projects", item.id), "createdAt");
+
+              }
+              
               let newItem = {key: item.id, name: data.name, opened: false}
 
             mydl.push(newItem);
@@ -92,6 +98,26 @@ function HomeScreen({navigation}){
       </View>
         ) })
   }, []));
+
+  async function fixDoc(docRef, itemNeeded){
+      try{
+        if(itemNeeded == "createdAt"){
+          let date = new Date();
+          console.log(date.getTime());
+          console.log(date.getDate());
+          await updateDoc(docRef, {
+            createdAt: date.getTime()
+         });
+        }
+        else{
+          console.warn("You called fixDoc with itemNeeded = ", itemNeeded, " ... what does that do?");
+        }
+        
+      }
+      catch(err){
+        console.warn(err);
+      }
+  }
 
     function reducer(state, action){
       console.log("Reducer function is starting");
@@ -140,7 +166,7 @@ function HomeScreen({navigation}){
     }
 
     useFocusEffect(React.useCallback(() => {
-      //console.log("Window width: ", width);
+      console.log("Window width: ", width);
       if(width<=384){
         setSidebarWidth(width);
       }
@@ -163,7 +189,8 @@ function HomeScreen({navigation}){
   }, [width]));
 
   useFocusEffect(React.useCallback(() => {
-    //console.log("Window height: ", height);
+    console.log("Window height: ", height);
+    console.log("Flatlist height: ", height*.865);
     setFlatlistHeight(height*.865);
     //console.log("310/731: ", 310/731);
     setFlatlistTop(height*-0.424);
@@ -283,11 +310,13 @@ function HomeScreen({navigation}){
     }
 
     async function confirmAddProject(){
-        console.log("Add doc to firestore here");
+        
         setNewProjectModalVisible(false);
+        let date = new Date();
         try{   
             await addDoc(collection(firestore, "Users", user.uid, "Projects"), {
-                name: newProjectName 
+                name: newProjectName, 
+                createdAt: date.getTime(),
             });
           }
           catch(err){
@@ -302,17 +331,19 @@ function HomeScreen({navigation}){
         try{
            let copyOPL = JSON.parse(JSON.stringify(openProjectList));
 
-           let projectLocation = binarySearch(copyOPL, project, 0, (copyOPL.length -1));
+           let projectLocation = false;
+
+           for(let i = 0; i < copyOPL.length && projectLocation === false; i++){
+            if(copyOPL[i].key == project.key ){
+              projectLocation = i;
+            }
+           }
+
           
            if(projectLocation !== false){
               copyOPL.splice(projectLocation, 1);
            }
 
-            // copyOPL.forEach((item, index) => {
-            //     if(project.key == item.key){
-            //             copyOPL.splice(index, 1);
-            //     }
-            // });
             setOpenProjectList(copyOPL);
             await deleteDoc(doc(firestore, "Users", user.uid, "Projects", project.key));
           
@@ -397,7 +428,12 @@ function HomeScreen({navigation}){
                 </View>
     </Modal>
 
-    <Animated.View style={[styles.sidebar, {width: sidebarWidth, }, sideStyle]}>        
+    <Animated.View style={[styles.sidebar, {width: sidebarWidth, }, sideStyle]}> 
+
+        <TouchableOpacity onPress={() => console.log("Add stuff here")} style={{marginTop: 10, padding: 10, borderRadius: 20, backgroundColor: '#deb1f0'}}>
+            <Text style={styles.paragraph}>Sort Projects</Text>
+        </TouchableOpacity>
+      
         <FlatList
         //this builds a scrollable list of the items
              data={projectList}
@@ -411,21 +447,19 @@ function HomeScreen({navigation}){
     </Animated.View>
 
 
-    <Animated.View style={[styles.mainAreaTests, /*{top: flatlistTop,}*/]}>
-      <View style={{backgroundColor:'#f7ebfc', width: "100%", justifyContent: "center",}}>
-        
+    <View style={[styles.mainAreaTests, /*{top: flatlistTop,}*/]}> 
         <FlatList
         //this builds a scrollable list of the items
              data={openProjectList}
              numColumns={numColumns}
              key={numColumns}
-             renderItem={({item, index}) => <OpenProject item={item} index={index} columns={numColumns}></OpenProject>}
+             renderItem={({item, index}) => <OpenProject item={item} index={index} columns={Math.min(numColumns, openProjectList.length)}></OpenProject>}
              keyExtractor={(item) => item.key.toString()}
              style={[styles.mainAreaFlatlistTests, {height: flatlistHeight, }]}
-          
+             contentContainerStyle={{alignItems: "center", justifyContent: "flex-start", flex: 1, height: "100%", width: "100%"}}
+          //
         />
-        </View>
-    </Animated.View>
+    </View>
 </View>
 
   

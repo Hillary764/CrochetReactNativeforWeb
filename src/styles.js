@@ -46,21 +46,21 @@ const styles = StyleSheet.create({
 
     mainAreaTests: {
       backgroundColor: '#f7ebfc',
-      alignItems: 'center',
+      //alignItems: 'center',
       justifyContent: 'center',  
       //alignSelf: "stretch",
       height: "100%",
       width: "100%",
-      //alignContent: "start",
-      
+      alignContent: "flex-start",
+      flex: 1,    
     },
 
     mainAreaFlatlistTests: {
       position: "absolute",
-      //alignSelf: "center",
+      alignSelf: "start",
       width: "100%",
-      
-      // left: 10,
+      flex: 1,
+      // // left: 10,
     },
 
       touchableOpacityProfile: {

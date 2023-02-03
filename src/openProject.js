@@ -13,7 +13,7 @@ import {Note} from './notes.js';
 const OpenProject = (props) => {
     const item = props.item;
     const index = props.index;
-    const columns = props.columns
+    const columns = props.columns;
 
     const [name, setName] = useState(item.name);
     const [countersList, setCountersList] = useState(item.counters);
@@ -77,12 +77,14 @@ const OpenProject = (props) => {
     }, []);
 
     useEffect(() => {
-        setProjectWidth(Math.min(width, 200));
+        
+        setProjectWidth(width/columns);
     }, [width]);
 
     function changeNumCounterColumns(layout) {
         const {width} = layout;
         console.warn("Width of single project: ", width);
+        console.log(Math.floor(width/160));
         setNumCounterColumns(Math.floor(width/160));
     }
 
@@ -114,7 +116,8 @@ const OpenProject = (props) => {
     }
 
     return(
-        <View style={[{flex: 1, paddingHorizontal: 5, width: projectWidth,}, 
+        <View style={[{flex: 1, height: "100%", width: projectWidth, },
+        // justifyContent: "center",
             index>0&&columns>1?{borderLeftWidth: 5, borderStyle: "dotted", borderColor: '#c094d1'}:{borderWidth: 0}]}
         onLayout={(event) => {changeNumCounterColumns(event.nativeEvent.layout)}}>
             <Text style={styles.projectTitleText}>{name}</Text>
@@ -126,6 +129,7 @@ const OpenProject = (props) => {
                 numColumns={numCounterColumns}
                 key={item.key.toString()+numCounterColumns.toString()}
                 listKey={item.key.toString()+numCounterColumns.toString()}
+                // style={{justifyContent: "center", justifySelf: "center"}}
                 >
                 
              </FlatList>
