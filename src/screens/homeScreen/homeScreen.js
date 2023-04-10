@@ -13,7 +13,7 @@ import { buttonStyles } from "../../styles/buttonStyles.js";
 import { useFocusEffect } from "@react-navigation/native";
 import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
 
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useRef } from "react";
 import {
   setDoc,
   orderBy,
@@ -79,6 +79,8 @@ function HomeScreen({ navigation }) {
   const colRef = collection(firestore, "Users", user.uid, "Projects");
   const [q, setQ] = useState(null);
   const [sortModalVisible, setSortModalVisible] = useState(false);
+
+  const projectButtonRef = useRef(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -155,6 +157,10 @@ function HomeScreen({ navigation }) {
               activeOpacity={0.8}
               onPress={() => sidebarSlide()}
               style={[buttonStyles.menuButton]}
+              ref={projectButtonRef}
+              onMouseEnter={() => {
+                console.log(projectButtonRef.current);
+              }}
             >
               <Text style={styles.logoutText}>Projects</Text>
             </TouchableOpacity>
@@ -241,6 +247,17 @@ function HomeScreen({ navigation }) {
         copyOldState[action.index] = action.project;
         return copyOldState;
 
+      case "open or close":
+        let copyOldState2 = JSON.parse(JSON.stringify(state));
+        let projectFound = false;
+        for (let i = 0; i < copyOldState2.length && !projectFound; i++) {
+          if (copyOldState2[i].key == action.key) {
+            copyOldState2[i].opened = action.openedState;
+            projectFound = true;
+          }
+        }
+        return copyOldState2;
+
       default:
         //if we get here, we were given a bad action.type
         throw new Error(
@@ -300,6 +317,7 @@ function HomeScreen({ navigation }) {
   async function displayProject(project) {
     //console.log("Project: ", project);
     let copyProject = project;
+    let newOpenedState = false;
     //let copyProjectList = projectList;
     //console.log("Open projects: ", openProjectList);
     //console.log("Is it already open??: ", project.opened);
@@ -309,6 +327,8 @@ function HomeScreen({ navigation }) {
     if (project.opened) {
       //well, we need to shut it
       copyProject.opened = false;
+
+      newOpenedState = false;
 
       copyOPL.forEach((item, index) => {
         //I've been fighting weirdness
@@ -324,6 +344,8 @@ function HomeScreen({ navigation }) {
       //first we need to set opened to true, either way
 
       copyProject.opened = true;
+
+      newOpenedState = true;
 
       //now need to quickly double-check if it is open
       let itemOpened = false;
@@ -407,10 +429,15 @@ function HomeScreen({ navigation }) {
     //copyProjectList[indexNeeded] = copyProject;
     //console.log("Copy project list now: ", copyProjectList);
     //setProjectList(copyProjectList);
+    // updateProjectList({
+    //   type: "single update",
+    //   index: indexNeeded,
+    //   project: copyProject,
+    // });
     updateProjectList({
-      type: "single update",
-      index: indexNeeded,
-      project: copyProject,
+      type: "open or close",
+      key: project.key,
+      openedState: newOpenedState,
     });
     setOpenProjectList(copyOPL);
   }

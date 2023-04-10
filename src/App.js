@@ -47,6 +47,9 @@ function UserStack() {
               activeOpacity={0.8}
               onPress={() => signOut(auth)}
               style={buttonStyles.touchableOpacityProfile}
+              onMouseEnter={() => {
+                console.log("test mouse enter");
+              }}
             >
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
