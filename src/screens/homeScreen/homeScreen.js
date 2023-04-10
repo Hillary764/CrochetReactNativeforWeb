@@ -8,13 +8,15 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { styles } from "./styles.js";
+import { styles } from "../../styles/styles.js";
+import { buttonStyles } from "../../styles/buttonStyles.js";
 import { useFocusEffect } from "@react-navigation/native";
-import { firebaseConfig, app, auth, firestore } from "./firebaseSetup.js";
+import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
 
 import React, { useState, useReducer } from "react";
 import {
   setDoc,
+  orderBy,
   doc,
   addDoc,
   updateDoc,
@@ -24,15 +26,16 @@ import {
   onSnapshot,
   query,
 } from "firebase/firestore";
-import { userContext } from "./App.js";
-import { Counter, Separator } from "./counters.js";
-import { OpenProject } from "./openProject.js";
+import { userContext } from "../../App.js";
+import { Counter, Separator } from "../../openProject/components/counters.js";
+import { OpenProject } from "../../openProject/openProject.js";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import ProjectItem from "./components/projectItem.js";
 
 function binarySearch(list, item, min, max) {
   if (min > max) {
@@ -83,9 +86,23 @@ function HomeScreen({ navigation }) {
       switch (q) {
         case null:
           query1 = query(colRef);
+          break;
 
-        case "created-at":
-          query1 = query;
+        case "createdAtDesc":
+          query1 = query(colRef, orderBy("createdAt", "desc"));
+          break;
+
+        case "createdAt":
+          query1 = query(colRef, orderBy("createdAt"));
+          break;
+
+        case "lastOpenedDesc":
+          query1 = query(colRef, orderBy("lastOpened", "desc"));
+          break;
+
+        case "lastOpened":
+          query1 = query(colRef, orderBy("lastOpened"));
+          break;
 
         default:
           query1 = query(colRef);
@@ -104,6 +121,14 @@ function HomeScreen({ navigation }) {
               fixDoc(
                 doc(firestore, "Users", user.uid, "Projects", item.id),
                 "createdAt"
+              );
+            }
+
+            if (!("lastOpened" in data)) {
+              console.log("there was no last opened time here!");
+              fixDoc(
+                doc(firestore, "Users", user.uid, "Projects", item.id),
+                "lastOpened"
               );
             }
 
@@ -129,7 +154,7 @@ function HomeScreen({ navigation }) {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => sidebarSlide()}
-              style={[styles.menuButton2]}
+              style={[buttonStyles.menuButton]}
             >
               <Text style={styles.logoutText}>Projects</Text>
             </TouchableOpacity>
@@ -141,19 +166,30 @@ function HomeScreen({ navigation }) {
 
   async function fixDoc(docRef, itemNeeded) {
     try {
-      if (itemNeeded == "createdAt") {
-        let date = new Date();
-        console.log(date.getTime());
-        console.log(date.getDate());
-        await updateDoc(docRef, {
-          createdAt: date.getTime(),
-        });
-      } else {
-        console.warn(
-          "You called fixDoc with itemNeeded = ",
-          itemNeeded,
-          " ... what does that do?"
-        );
+      let date = new Date();
+      switch (itemNeeded) {
+        case "createdAt":
+          console.log(date.getTime());
+          console.log(date.getDate());
+          await updateDoc(docRef, {
+            createdAt: date.getTime(),
+          });
+          break;
+
+        case "lastOpened":
+          // console.log(date.getTime());
+          // console.log(date.getDate());
+          await updateDoc(docRef, {
+            lastOpened: date.getTime(),
+          });
+          break;
+
+        default:
+          console.warn(
+            "You called fixDoc with itemNeeded = ",
+            itemNeeded,
+            " ... what does that do?"
+          );
       }
     } catch (err) {
       console.warn(err);
@@ -295,7 +331,7 @@ function HomeScreen({ navigation }) {
       copyOPL.forEach((item, index) => {
         if (copyProject.key == item.key) {
           //item was open
-          itemOpened = true;
+          // itemOpened = true;
           copyOPL.splice(index, 1);
         }
       });
@@ -303,6 +339,17 @@ function HomeScreen({ navigation }) {
       if (!itemOpened) {
         //well it should really not be in open project list?
         //note to self: still an issue?
+
+        let docRef = doc(firestore, "Users", user.uid, "Projects", project.key);
+
+        try {
+          let date = new Date();
+          await updateDoc(docRef, {
+            lastOpened: date.getTime(),
+          });
+        } catch (err) {
+          console.warn(err);
+        }
 
         let colRef = collection(
           firestore,
@@ -342,12 +389,19 @@ function HomeScreen({ navigation }) {
     }
 
     // let indexNeeded = projectList.indexOf(project);
-    let indexNeeded = binarySearch(
-      projectList,
-      project,
-      0,
-      projectList.length - 1
-    );
+    let indexNeeded = 0;
+
+    for (let i = 0; i < projectList.length; i++) {
+      if (projectList[i].key == project.key) {
+        indexNeeded = i;
+      }
+    }
+    // let indexNeeded = binarySearch(
+    //   projectList,
+    //   project,
+    //   0,
+    //   projectList.length - 1
+    // );
 
     //console.log("Index?: ", indexNeeded);
     //copyProjectList[indexNeeded] = copyProject;
@@ -380,77 +434,15 @@ function HomeScreen({ navigation }) {
     setNewProjectName("Untitled");
   }
 
-  async function deleteProject(project) {
-    try {
-      let copyOPL = JSON.parse(JSON.stringify(openProjectList));
-
-      let projectLocation = false;
-
-      for (let i = 0; i < copyOPL.length && projectLocation === false; i++) {
-        if (copyOPL[i].key == project.key) {
-          projectLocation = i;
-        }
-      }
-
-      if (projectLocation !== false) {
-        copyOPL.splice(projectLocation, 1);
-      }
-
-      setOpenProjectList(copyOPL);
-      await deleteDoc(
-        doc(firestore, "Users", user.uid, "Projects", project.key)
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const ProjectItem = ({ data, pressFunction }) => {
-    if (data.opened) {
-      return (
-        <View style={styles.projectTile}>
-          <TouchableOpacity
-            onPress={() => displayProject(data)}
-            style={[styles.item]}
-          >
-            <Text style={styles.paragraph}>{data.name}</Text>
-            <Text style={styles.paragraph}>Close Project</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteProject(data)}
-          >
-            <Text style={styles.paragraph}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.projectTile}>
-          <TouchableOpacity
-            onPress={() => displayProject(data)}
-            style={[styles.item]}
-          >
-            <Text style={styles.paragraph}>{data.name}</Text>
-            <Text style={styles.paragraph}>Open Project</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteProject(data)}
-          >
-            <Text style={styles.paragraph}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-  };
-
   const renderProject = ({ item }) => {
     return (
       <View style={{ padding: 10 }}>
-        <ProjectItem data={item} pressFunction={() => displayProject(item)} />
+        <ProjectItem
+          data={item}
+          displayProject={displayProject}
+          openProjectList={openProjectList}
+          setOpenProjectList={setOpenProjectList}
+        />
       </View>
     );
   };
@@ -479,14 +471,14 @@ function HomeScreen({ navigation }) {
             <Text> </Text>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
-                style={styles.touchableOpacityModal}
+                style={buttonStyles.touchableOpacityModal}
                 onPress={() => setNewProjectModalVisible(false)}
               >
                 <Text style={styles.paragraph}>Cancel</Text>
               </TouchableOpacity>
               <Text> </Text>
               <TouchableOpacity
-                style={styles.touchableOpacityModal}
+                style={buttonStyles.touchableOpacityModal}
                 onPress={() => confirmAddProject()}
               >
                 <Text style={styles.paragraph}>Confirm</Text>
@@ -511,17 +503,49 @@ function HomeScreen({ navigation }) {
         >
           <View style={styles.sortModal}>
             <TouchableOpacity
-              style={[styles.touchableOpacityModal]}
+              style={[buttonStyles.touchableOpacityModal]}
               onPress={() => {
-                setQ("recent");
+                setQ("lastOpenedDesc");
                 setSortModalVisible(false);
               }}
             >
-              <Text style={styles.paragraph}>Newest</Text>
+              <Text style={styles.paragraph}>Last Opened</Text>
             </TouchableOpacity>
             <Text> </Text>
             <TouchableOpacity
-              style={[styles.touchableOpacityModal]}
+              style={[buttonStyles.touchableOpacityModal]}
+              onPress={() => {
+                setQ("lastOpened");
+                setSortModalVisible(false);
+              }}
+            >
+              <Text style={styles.paragraph}>Last Opened {"(Reverse)"}</Text>
+            </TouchableOpacity>
+            <Text> </Text>
+            <TouchableOpacity
+              style={[buttonStyles.touchableOpacityModal]}
+              onPress={() => {
+                setQ("createdAtDesc");
+                setSortModalVisible(false);
+              }}
+            >
+              <Text style={styles.paragraph}>Recently Created</Text>
+            </TouchableOpacity>
+            <Text> </Text>
+            <TouchableOpacity
+              style={[buttonStyles.touchableOpacityModal]}
+              onPress={() => {
+                setQ("createdAt");
+                setSortModalVisible(false);
+              }}
+            >
+              <Text style={styles.paragraph}>
+                {"Recently Created (Reverse)"}
+              </Text>
+            </TouchableOpacity>
+            <Text> </Text>
+            <TouchableOpacity
+              style={[buttonStyles.touchableOpacityModal]}
               onPress={() => setSortModalVisible(false)}
             >
               <Text style={styles.paragraph}>Cancel</Text>
