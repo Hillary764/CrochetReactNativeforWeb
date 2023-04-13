@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { styles } from "../styles/styles.js";
+import textStyles from "../styles/textStyles.js";
 import { firestore } from "../firebaseSetup.js";
 import React, { useState, useEffect } from "react";
 import {
@@ -168,7 +169,7 @@ const OpenProject = (props) => {
         changeNumCounterColumns(event.nativeEvent.layout);
       }}
     >
-      <Text style={styles.projectTitleText}>{name}</Text>
+      <Text style={textStyles.projectTitleText}>{name}</Text>
 
       <FlatList
         data={countersList}
@@ -193,14 +194,14 @@ const OpenProject = (props) => {
         style={buttonStyles.addCounterButton}
         onPress={() => addCounter(item)}
       >
-        <Text style={styles.paragraph}>Add Counter</Text>
+        <Text style={textStyles.paragraph}>Add Counter</Text>
       </TouchableOpacity>
       <Separator />
       <TouchableOpacity
         style={buttonStyles.addCounterButton}
         onPress={() => addNote()}
       >
-        <Text style={styles.paragraph}>Add Note</Text>
+        <Text style={textStyles.paragraph}>Add Note</Text>
       </TouchableOpacity>
     </View>
   );

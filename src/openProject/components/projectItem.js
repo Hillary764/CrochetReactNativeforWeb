@@ -1,8 +1,9 @@
 import { TouchableOpacity, Text, View } from "react-native";
-import { styles } from "../../../styles/styles";
-import { buttonStyles } from "../../../styles/buttonStyles";
-import { userContext } from "../../../App";
-import { firestore } from "../../../firebaseSetup";
+import { styles } from "../../styles/styles";
+import { buttonStyles } from "../../styles/buttonStyles";
+import textStyles from "../../styles/textStyles";
+import { userContext } from "../../App";
+import { firestore } from "../../firebaseSetup";
 import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
 
@@ -47,15 +48,15 @@ const ProjectItem = ({
             onPress={() => displayProject(data)}
             style={[styles.item]}
           >
-            <Text style={styles.paragraph}>{data.name}</Text>
-            <Text style={styles.paragraph}>Close Project</Text>
+            <Text style={textStyles.paragraph}>{data.name}</Text>
+            <Text style={textStyles.paragraph}>Close Project</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={buttonStyles.deleteButton}
             onPress={() => deleteProject(data)}
           >
-            <Text style={styles.paragraph}>Delete</Text>
+            <Text style={textStyles.paragraph}>Delete</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -64,15 +65,15 @@ const ProjectItem = ({
             onPress={() => displayProject(data)}
             style={[styles.item]}
           >
-            <Text style={styles.paragraph}>{data.name}</Text>
-            <Text style={styles.paragraph}>Open Project</Text>
+            <Text style={textStyles.paragraph}>{data.name}</Text>
+            <Text style={textStyles.paragraph}>Open Project</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={buttonStyles.deleteButton}
             onPress={() => deleteProject(data)}
           >
-            <Text style={styles.paragraph}>Delete</Text>
+            <Text style={textStyles.paragraph}>Delete</Text>
           </TouchableOpacity>
         </View>
       )}

@@ -1,5 +1,6 @@
 import { TextInput, TouchableOpacity, Text, View } from "react-native";
 import { styles } from "../../styles/styles.js";
+import textStyles from "../../styles/textStyles.js";
 import { firestore } from "../../firebaseSetup.js";
 import React, { useState, useEffect } from "react";
 import {
@@ -49,7 +50,7 @@ const Note = (props) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={[styles.paragraph, { height: 300, width: "90%" }]}
+        style={[textStyles.paragraph, { height: 300, width: "90%" }]}
         multiline={true}
         onChangeText={(text) => setNoteText(text)}
         value={noteText}
@@ -63,7 +64,7 @@ const Note = (props) => {
           saveNote();
         }}
       >
-        <Text style={styles.paragraph}>Save Note</Text>
+        <Text style={textStyles.paragraph}>Save Note</Text>
       </TouchableOpacity>
 
       <Separator />
@@ -74,7 +75,7 @@ const Note = (props) => {
           deleteNote();
         }}
       >
-        <Text style={styles.paragraph}>Delete Note</Text>
+        <Text style={textStyles.paragraph}>Delete Note</Text>
       </TouchableOpacity>
     </View>
   );

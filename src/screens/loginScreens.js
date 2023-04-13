@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { styles } from "../styles/styles.js";
+import textStyles from "../styles/textStyles.js";
 import { firebaseConfig, app, auth, firestore } from "../firebaseSetup.js";
 import {
   GoogleAuthProvider,
@@ -57,7 +58,7 @@ function SignInScreen({ navigation }) {
         <View style={{ flexDirection: "row" }}>
           {/* <Image source={require('./assets/google.png')} style={buttonStyles.floatingButton}
         /> */}
-          <Text style={styles.paragraph}> Sign In With Google</Text>
+          <Text style={textStyles.paragraph}> Sign In With Google</Text>
         </View>
       </TouchableOpacity>
     </View>

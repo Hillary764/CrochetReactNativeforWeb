@@ -20,6 +20,18 @@ const buttonStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  // touchableOpacitySortModal: {
+  //   display: "flex",
+  //   width: "fit-content",
+  //   paddingLeft: "10px",
+  //   paddingRight: "10px",
+  //   height: 35,
+  //   backgroundColor: "#e0a8df",
+  //   borderRadius: 90,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
   googleLoginButton: {
     width: 300,
     height: 90,
@@ -77,6 +89,17 @@ const buttonStyles = StyleSheet.create({
     width: 150,
     height: 35,
     borderRadius: 50,
+  },
+
+  touchableOpacitySort: {
+    height: "100%",
+    minHeight: "fit-content",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: "10px",
   },
 });
 

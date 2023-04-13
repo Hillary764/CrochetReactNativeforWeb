@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { styles } from "../../styles/styles.js";
 import { buttonStyles } from "../../styles/buttonStyles.js";
+import textStyles from "../../styles/textStyles.js";
 import { useFocusEffect } from "@react-navigation/native";
 import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
 
@@ -35,7 +36,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import ProjectItem from "./components/projectItem.js";
+import ProjectItem from "../../openProject/components/projectItem.js";
+import SortButton from "../../openProject/components/sortButton.js";
 
 function binarySearch(list, item, min, max) {
   if (min > max) {
@@ -162,7 +164,7 @@ function HomeScreen({ navigation }) {
                 console.log(projectButtonRef.current);
               }}
             >
-              <Text style={styles.logoutText}>Projects</Text>
+              <Text style={textStyles.logoutText}>Projects</Text>
             </TouchableOpacity>
           </View>
         ),
@@ -487,10 +489,10 @@ function HomeScreen({ navigation }) {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <View style={styles.modal}>
-            <Text style={styles.paragraph}>Choose a project name:</Text>
+            <Text style={textStyles.paragraph}>Choose a project name:</Text>
             <Text> </Text>
             <TextInput
-              style={styles.paragraph}
+              style={textStyles.paragraph}
               placeholder="Enter Project Name"
               value={newProjectName}
               onChangeText={(value) => setNewProjectName(value)}
@@ -501,14 +503,14 @@ function HomeScreen({ navigation }) {
                 style={buttonStyles.touchableOpacityModal}
                 onPress={() => setNewProjectModalVisible(false)}
               >
-                <Text style={styles.paragraph}>Cancel</Text>
+                <Text style={textStyles.paragraph}>Cancel</Text>
               </TouchableOpacity>
               <Text> </Text>
               <TouchableOpacity
                 style={buttonStyles.touchableOpacityModal}
                 onPress={() => confirmAddProject()}
               >
-                <Text style={styles.paragraph}>Confirm</Text>
+                <Text style={textStyles.paragraph}>Confirm</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -529,54 +531,47 @@ function HomeScreen({ navigation }) {
           }}
         >
           <View style={styles.sortModal}>
-            <TouchableOpacity
-              style={[buttonStyles.touchableOpacityModal]}
-              onPress={() => {
-                setQ("lastOpenedDesc");
-                setSortModalVisible(false);
-              }}
-            >
-              <Text style={styles.paragraph}>Last Opened</Text>
-            </TouchableOpacity>
-            <Text> </Text>
-            <TouchableOpacity
-              style={[buttonStyles.touchableOpacityModal]}
-              onPress={() => {
-                setQ("lastOpened");
-                setSortModalVisible(false);
-              }}
-            >
-              <Text style={styles.paragraph}>Last Opened {"(Reverse)"}</Text>
-            </TouchableOpacity>
-            <Text> </Text>
-            <TouchableOpacity
-              style={[buttonStyles.touchableOpacityModal]}
-              onPress={() => {
-                setQ("createdAtDesc");
-                setSortModalVisible(false);
-              }}
-            >
-              <Text style={styles.paragraph}>Recently Created</Text>
-            </TouchableOpacity>
-            <Text> </Text>
-            <TouchableOpacity
-              style={[buttonStyles.touchableOpacityModal]}
-              onPress={() => {
-                setQ("createdAt");
-                setSortModalVisible(false);
-              }}
-            >
-              <Text style={styles.paragraph}>
-                {"Recently Created (Reverse)"}
-              </Text>
-            </TouchableOpacity>
-            <Text> </Text>
-            <TouchableOpacity
-              style={[buttonStyles.touchableOpacityModal]}
-              onPress={() => setSortModalVisible(false)}
-            >
-              <Text style={styles.paragraph}>Cancel</Text>
-            </TouchableOpacity>
+            <View style={styles.sortModalTextContainer}>
+              <Text style={textStyles.sortButtonText}>Select a Sort:</Text>
+            </View>
+            <View style={styles.sortModalOptionContainer}>
+              <SortButton
+                pressFunction={() => {
+                  setQ("lastOpenedDesc");
+                  setSortModalVisible(false);
+                }}
+                sortType="Last Opened"
+              />
+
+              <SortButton
+                pressFunction={() => {
+                  setQ("lastOpened");
+                  setSortModalVisible(false);
+                }}
+                sortType="Last Opened (Reverse)"
+              />
+
+              <SortButton
+                pressFunction={() => {
+                  setQ("createdAtDesc");
+                  setSortModalVisible(false);
+                }}
+                sortType="Recently Created"
+              />
+
+              <SortButton
+                pressFunction={() => {
+                  setQ("createdAt");
+                  setSortModalVisible(false);
+                }}
+                sortType="Recently Created (Reverse)"
+              />
+
+              <SortButton
+                pressFunction={() => setSortModalVisible(false)}
+                sortType="Cancel"
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -593,7 +588,7 @@ function HomeScreen({ navigation }) {
             backgroundColor: "#deb1f0",
           }}
         >
-          <Text style={styles.paragraph}>Sort Projects</Text>
+          <Text style={textStyles.paragraph}>Sort Projects</Text>
         </TouchableOpacity>
 
         <FlatList
@@ -604,7 +599,7 @@ function HomeScreen({ navigation }) {
           style={{ width: "100%" }}
         />
         <TouchableOpacity onPress={() => addProject()} style={[styles.item]}>
-          <Text style={styles.paragraph}>Add New Project</Text>
+          <Text style={textStyles.paragraph}>Add New Project</Text>
         </TouchableOpacity>
       </Animated.View>
 

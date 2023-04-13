@@ -1,6 +1,7 @@
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { styles } from "./styles/styles.js";
 import { buttonStyles } from "./styles/buttonStyles.js";
+import textStyles from "./styles/textStyles.js";
 import { firebaseConfig, app, auth, firestore } from "./firebaseSetup.js";
 import { SignInScreen } from "./screens/loginScreens.js";
 import { NavigationContainer } from "@react-navigation/native";
@@ -51,7 +52,7 @@ function UserStack() {
                 console.log("test mouse enter");
               }}
             >
-              <Text style={styles.logoutText}>Logout</Text>
+              <Text style={textStyles.logoutText}>Logout</Text>
             </TouchableOpacity>
           ),
         })}

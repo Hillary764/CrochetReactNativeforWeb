@@ -9,15 +9,8 @@ import {
   View,
 } from "react-native";
 import { styles } from "../../styles/styles.js";
-import { useFocusEffect } from "@react-navigation/native";
+import textStyles from "../../styles/textStyles.js";
 import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithCredential,
-  onAuthStateChanged,
-  User,
-} from "firebase/auth";
 import React, { useState, useEffect } from "react";
 import {
   setDoc,
@@ -70,14 +63,14 @@ const Counter = (props) => {
               setRenameVal(value);
             }}
             style={[
-              styles.paragraph,
+              textStyles.paragraph,
               { backgroundColor: "#ffffff", borderRadius: 50 },
             ]}
           />
         </View>
       );
     } else {
-      return <Text style={styles.paragraph}>{name} Counter</Text>;
+      return <Text style={textStyles.paragraph}>{name} Counter</Text>;
     }
   }
 
@@ -91,14 +84,17 @@ const Counter = (props) => {
             setNewIncrement(value);
           }}
           style={[
-            styles.paragraph,
+            textStyles.paragraph,
             { width: 50, backgroundColor: "#ffffff", borderRadius: 50 },
           ]}
         />
       );
     } else {
       return (
-        <Text style={[styles.paragraph, { width: 50 }]}> {incrementVal} </Text>
+        <Text style={[textStyles.paragraph, { width: 50 }]}>
+          {" "}
+          {incrementVal}{" "}
+        </Text>
       );
     }
   }
@@ -143,7 +139,7 @@ const Counter = (props) => {
               }
             }}
           >
-            <Text style={styles.paragraph}>Save</Text>
+            <Text style={textStyles.paragraph}>Save</Text>
           </TouchableOpacity>
 
           <Separator />
@@ -153,7 +149,7 @@ const Counter = (props) => {
               setEditMode(!editMode);
             }}
           >
-            <Text style={styles.paragraph}>Finish Edits</Text>
+            <Text style={textStyles.paragraph}>Finish Edits</Text>
           </TouchableOpacity>
         </View>
       );
@@ -165,7 +161,7 @@ const Counter = (props) => {
             setEditMode(!editMode);
           }}
         >
-          <Text style={styles.paragraph}>Edit Counter</Text>
+          <Text style={textStyles.paragraph}>Edit Counter</Text>
         </TouchableOpacity>
       );
     }
@@ -211,7 +207,7 @@ const Counter = (props) => {
       {/* first show the item name */}
       <Separator></Separator>
       <View>
-        <Text style={styles.paragraph}> {item.count}</Text>
+        <Text style={textStyles.paragraph}> {item.count}</Text>
       </View>
       <Separator></Separator>
 
@@ -223,7 +219,7 @@ const Counter = (props) => {
             incrementCounter("minus");
           }}
         >
-          <Text style={styles.minusIncrementText}>-</Text>
+          <Text style={textStyles.minusIncrementText}>-</Text>
         </TouchableOpacity>
         {buildIncrementer()}
         <TouchableOpacity
@@ -232,7 +228,7 @@ const Counter = (props) => {
             incrementCounter("plus");
           }}
         >
-          <Text style={styles.plusIncrementText}>+</Text>
+          <Text style={textStyles.plusIncrementText}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -250,7 +246,7 @@ const Counter = (props) => {
           zeroOut();
         }}
       >
-        <Text style={styles.paragraph}>Reset to 0</Text>
+        <Text style={textStyles.paragraph}>Reset to 0</Text>
       </TouchableOpacity>
 
       {/*Finally, probably want a "delete counter" option*/}
@@ -261,7 +257,7 @@ const Counter = (props) => {
           deleteCounter();
         }}
       >
-        <Text style={styles.paragraph}>Delete Counter</Text>
+        <Text style={textStyles.paragraph}>Delete Counter</Text>
       </TouchableOpacity>
       <Separator />
       <Separator />

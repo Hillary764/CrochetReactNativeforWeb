@@ -61,37 +61,6 @@ const styles = StyleSheet.create({
     // // left: 10,
   },
 
-  logoutText: {
-    fontSize: 14,
-    textAlign: "center",
-    color: "#3f344d",
-  },
-
-  paragraph: {
-    fontSize: 18,
-    textAlign: "center",
-  },
-
-  projectTitleText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  minusIncrementText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingBottom: 5,
-  },
-
-  plusIncrementText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingBottom: 3,
-  },
-
   item: {
     padding: 20,
     marginVertical: 8,
@@ -124,13 +93,44 @@ const styles = StyleSheet.create({
   sortModal: {
     alignItems: "center",
     justifyContent: "center",
+    // alignContent: "space-between",
     textAlign: "center",
     flexDirection: "column",
-    padding: 20,
+    padding: 0,
     backgroundColor: "#f1d2f7",
     height: "75%",
     width: "35%",
     borderRadius: "5px",
+  },
+
+  sortModalOptionContainer: {
+    borderTopWidth: "1px",
+    borderBottomWidth: "1px",
+    borderColor: "#591a6e",
+    height: "50%",
+    display: "flex",
+    alignSelf: "flex-end",
+    width: "100%",
+    flex: 1,
+  },
+
+  sortModalTextContainer: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  sortButtonContainer: {
+    display: "flex",
+    width: "100%",
+    flex: 1,
+    minHeight: "fit-content",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopWidth: "1px",
+    borderBottomWidth: "1px",
+    borderColor: "#591a6e",
   },
 
   separator: {
