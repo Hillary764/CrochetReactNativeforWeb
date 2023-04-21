@@ -32,11 +32,12 @@ import Animated, {
   SlideInUp,
 } from "react-native-reanimated";
 import { buttonStyles } from "../../styles/buttonStyles.js";
+import containerStyles from "../../styles/containerStyles.js";
 
 const Separator = () => <Text style={styles.separator}> </Text>;
 
-const Counter = (props) => {
-  const item = props.item;
+const Counter = ({ item, availableWidth }) => {
+  // const item = props.item;
   const docRef = doc(
     firestore,
     "Users",
@@ -55,7 +56,7 @@ const Counter = (props) => {
   function buildName() {
     if (editMode) {
       return (
-        <View style={styles.container}>
+        <View style={containerStyles.container}>
           <TextInput
             placeholder={name}
             value={renameVal}
@@ -64,7 +65,7 @@ const Counter = (props) => {
             }}
             style={[
               textStyles.paragraph,
-              { backgroundColor: "#ffffff", borderRadius: 50 },
+              { backgroundColor: "#ffffff", borderRadius: 50, width: "95%" },
             ]}
           />
         </View>
@@ -201,7 +202,8 @@ const Counter = (props) => {
   return (
     <View
       key={item.key}
-      style={[styles.container, { width: 160, alignSelf: "center" }]}
+      style={[containerStyles.counterContainer]}
+      //{ maxWidth: availableWidth }
     >
       <View>{buildName()}</View>
       {/* first show the item name */}
@@ -252,7 +254,7 @@ const Counter = (props) => {
       {/*Finally, probably want a "delete counter" option*/}
       <Separator />
       <TouchableOpacity
-        style={styles.addCounterButton}
+        style={buttonStyles.addCounterButton}
         onPress={() => {
           deleteCounter();
         }}

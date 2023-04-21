@@ -18,6 +18,7 @@ import {
 } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 import { buttonStyles } from "../styles/buttonStyles.js";
+import containerStyles from "../styles/containerStyles.js";
 
 //TODO add regular email login?
 
@@ -48,7 +49,7 @@ function SignInScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyles.container}>
       <TouchableOpacity
         //this button is what tries to sign you in
         activeOpacity={0.8}

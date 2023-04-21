@@ -25,6 +25,7 @@ import Animated, {
   interpolateColor,
   withTiming,
 } from "react-native-reanimated";
+import containerStyles from "../styles/containerStyles.js";
 
 function LoadingScreen({ navigation }) {
   const loadingText = ["loading.", "loading..", "loading..."];
@@ -90,7 +91,7 @@ function LoadingScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyles.container}>
       <Text>{loadingText[loadNum]}</Text>
       <View style={{ height: 25 }}></View>
       <Animated.View style={animatedStyleContainer}>

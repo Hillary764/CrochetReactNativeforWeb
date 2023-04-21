@@ -11,6 +11,7 @@ import {
 import { styles } from "../../styles/styles.js";
 import { buttonStyles } from "../../styles/buttonStyles.js";
 import textStyles from "../../styles/textStyles.js";
+import containerStyles from "../../styles/containerStyles.js";
 import { useFocusEffect } from "@react-navigation/native";
 import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
 
@@ -36,8 +37,9 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import ProjectItem from "../../openProject/components/projectItem.js";
-import SortButton from "../../openProject/components/sortButton.js";
+import ProjectItem from "./components/projectItem.js";
+import SortButton from "./components/sortButton.js";
+import OpenSidebarButton from "./components/openSidebarButton.js";
 
 function binarySearch(list, item, min, max) {
   if (min > max) {
@@ -81,8 +83,6 @@ function HomeScreen({ navigation }) {
   const colRef = collection(firestore, "Users", user.uid, "Projects");
   const [q, setQ] = useState(null);
   const [sortModalVisible, setSortModalVisible] = useState(false);
-
-  const projectButtonRef = useRef(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -154,19 +154,7 @@ function HomeScreen({ navigation }) {
     React.useCallback(() => {
       navigation.setOptions({
         headerLeft: () => (
-          <View style={{ paddingLeft: "5%" }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => sidebarSlide()}
-              style={[buttonStyles.menuButton]}
-              ref={projectButtonRef}
-              onMouseEnter={() => {
-                console.log(projectButtonRef.current);
-              }}
-            >
-              <Text style={textStyles.logoutText}>Projects</Text>
-            </TouchableOpacity>
-          </View>
+          <OpenSidebarButton pressFunction={() => sidebarSlide()} />
         ),
       });
     }, [])
@@ -477,7 +465,9 @@ function HomeScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container2, { width: width, height: height }]}>
+    <View
+      style={[containerStyles.container2, { width: width, height: height }]}
+    >
       <Modal
         animationType="slide"
         transparent
@@ -579,45 +569,49 @@ function HomeScreen({ navigation }) {
       <Animated.View
         style={[styles.sidebar, { width: sidebarWidth }, sideStyle]}
       >
-        <TouchableOpacity
-          onPress={() => setSortModalVisible(true)}
-          style={{
-            marginTop: 10,
-            padding: 10,
-            borderRadius: 20,
-            backgroundColor: "#deb1f0",
-          }}
-        >
-          <Text style={textStyles.paragraph}>Sort Projects</Text>
-        </TouchableOpacity>
-
+        <View style={styles.sidebarTopContainer}>
+          <TouchableOpacity
+            onPress={() => setSortModalVisible(true)}
+            style={buttonStyles.touchableOpacityInnerSidebar}
+          >
+            <Text style={textStyles.sidebarButtonText}>Sort Projects</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           //this builds a scrollable list of the items
           data={projectList}
           renderItem={renderProject}
           keyExtractor={(item) => item.key.toString()}
-          style={{ width: "100%" }}
+          style={{ width: "100%", backgroundColor: "#e9c0fa" }}
         />
-        <TouchableOpacity onPress={() => addProject()} style={[styles.item]}>
-          <Text style={textStyles.paragraph}>Add New Project</Text>
-        </TouchableOpacity>
+        <View style={styles.sidebarBottomContainer}>
+          <TouchableOpacity
+            onPress={() => addProject()}
+            style={[buttonStyles.touchableOpacityInnerSidebar]}
+          >
+            <Text style={textStyles.sidebarButtonText}>Add New Project</Text>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
 
-      <View style={[styles.mainAreaTests /*{top: flatlistTop,}*/]}>
+      <View style={[containerStyles.mainArea /*{top: flatlistTop,}*/]}>
         <FlatList
           //this builds a scrollable list of the items
           data={openProjectList}
           numColumns={numColumns}
           key={numColumns}
           renderItem={({ item, index }) => (
-            <OpenProject
-              item={item}
-              index={index}
-              columns={Math.min(numColumns, openProjectList.length)}
-            ></OpenProject>
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <OpenProject
+                item={item}
+                index={index}
+                columns={Math.min(numColumns, openProjectList.length)}
+              ></OpenProject>
+              <View style={{ height: 6 }} />
+            </View>
           )}
           keyExtractor={(item) => item.key.toString()}
-          style={[styles.mainAreaFlatlistTests, { height: flatlistHeight }]}
+          style={[styles.mainAreaFlatlist, { height: flatlistHeight }]}
           contentContainerStyle={{
             alignItems: "center",
             justifyContent: "flex-start",

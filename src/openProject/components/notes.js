@@ -19,6 +19,7 @@ import {
 import { userContext } from "../../App.js";
 import { Separator } from "./counters.js";
 import { buttonStyles } from "../../styles/buttonStyles.js";
+import containerStyles from "../../styles/containerStyles.js";
 
 const Note = (props) => {
   const item = props.item;
@@ -48,7 +49,7 @@ const Note = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyles.container}>
       <TextInput
         style={[textStyles.paragraph, { height: 300, width: "90%" }]}
         multiline={true}

@@ -1,9 +1,9 @@
 import { TouchableOpacity, Text, View } from "react-native";
-import { styles } from "../../styles/styles";
-import { buttonStyles } from "../../styles/buttonStyles";
-import textStyles from "../../styles/textStyles";
-import { userContext } from "../../App";
-import { firestore } from "../../firebaseSetup";
+import { styles } from "../../../styles/styles";
+import { buttonStyles } from "../../../styles/buttonStyles";
+import textStyles from "../../../styles/textStyles";
+import { userContext } from "../../../App";
+import { firestore } from "../../../firebaseSetup";
 import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
 
@@ -43,37 +43,57 @@ const ProjectItem = ({
   return (
     <>
       {data.opened ? (
-        <View style={styles.projectTile}>
+        <View style={[styles.projectTile, styles.projectTileClosedColors]}>
           <TouchableOpacity
             onPress={() => displayProject(data)}
-            style={[styles.item]}
+            style={[buttonStyles.openCloseProjectButton]}
           >
-            <Text style={textStyles.paragraph}>{data.name}</Text>
-            <Text style={textStyles.paragraph}>Close Project</Text>
+            <Text
+              style={[
+                textStyles.sidebarButtonText,
+                { paddingLeft: 5, paddingRight: 6 },
+              ]}
+              numberOfLines={2}
+            >
+              {data.name}
+            </Text>
+            <Text style={[textStyles.sidebarButtonText, { fontSize: 18 }]}>
+              Close Project
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={buttonStyles.deleteButton}
+            style={[buttonStyles.deleteButton, { backgroundColor: "#c97be0" }]}
             onPress={() => deleteProject(data)}
           >
-            <Text style={textStyles.paragraph}>Delete</Text>
+            <Text style={textStyles.sidebarButtonText}>Delete</Text>
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.projectTile}>
+        <View style={[styles.projectTile, styles.projectTileOpenColors]}>
           <TouchableOpacity
             onPress={() => displayProject(data)}
-            style={[styles.item]}
+            style={[buttonStyles.openCloseProjectButton]}
           >
-            <Text style={textStyles.paragraph}>{data.name}</Text>
-            <Text style={textStyles.paragraph}>Open Project</Text>
+            <Text
+              style={[
+                textStyles.sidebarButtonText,
+                { paddingLeft: 5, paddingRight: 5 },
+              ]}
+              numberOfLines={2}
+            >
+              {data.name}
+            </Text>
+            <Text style={[textStyles.sidebarButtonText, { fontSize: 18 }]}>
+              Open Project
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={buttonStyles.deleteButton}
             onPress={() => deleteProject(data)}
           >
-            <Text style={textStyles.paragraph}>Delete</Text>
+            <Text style={textStyles.sidebarButtonText}>Delete</Text>
           </TouchableOpacity>
         </View>
       )}

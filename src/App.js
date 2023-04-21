@@ -10,6 +10,7 @@ import { HomeScreen } from "./screens/homeScreen/homeScreen.js";
 import { LoadingScreen } from "./screens/loadingscreen.js";
 import { getAuth, onAuthStateChanged, User, signOut } from "firebase/auth";
 import React, { useState, useEffect } from "react";
+import LogoutButton from "./screens/homeScreen/components/logoutButton.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,17 +44,18 @@ function UserStack() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: "#fcf7ff",
+            borderBottomWidth: 2,
+            borderBottomColor: "#f0e1f0",
+            display: "flex",
+            flexWrap: "wrap",
+          },
+          headerTitleStyle: {
+            display: "none",
+          },
           headerRight: () => (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => signOut(auth)}
-              style={buttonStyles.touchableOpacityProfile}
-              onMouseEnter={() => {
-                console.log("test mouse enter");
-              }}
-            >
-              <Text style={textStyles.logoutText}>Logout</Text>
-            </TouchableOpacity>
+            <LogoutButton pressFunction={() => signOut(auth)} />
           ),
         })}
       >

@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { styles } from "../styles/styles.js";
+import containerStyles from "../styles/containerStyles.js";
 import textStyles from "../styles/textStyles.js";
 import { firestore } from "../firebaseSetup.js";
 import React, { useState, useEffect } from "react";
@@ -32,6 +33,7 @@ const OpenProject = (props) => {
   const [notesList, setNotesList] = useState([]);
   const { height, width } = useWindowDimensions();
   const [projectWidth, setProjectWidth] = useState(200);
+  const [counterWidth, setCounterWidth] = useState(160);
 
   const [numCounterColumns, setNumCounterColumns] = useState(1);
 
@@ -106,14 +108,18 @@ const OpenProject = (props) => {
   }, []);
 
   useEffect(() => {
-    setProjectWidth(width / columns);
+    setProjectWidth((width * 0.95) / columns);
   }, [width]);
 
   function changeNumCounterColumns(layout) {
     const { width } = layout;
     console.warn("Width of single project: ", width);
-    console.log(Math.floor(width / 160));
-    setNumCounterColumns(Math.floor(width / 160));
+
+    let numColumnsNeeded = Math.ceil(width / 400);
+    console.log("project needs ", numColumnsNeeded, " columns?");
+
+    setNumCounterColumns(numColumnsNeeded);
+    setCounterWidth(width / numColumnsNeeded);
   }
 
   async function addCounter() {
@@ -155,15 +161,16 @@ const OpenProject = (props) => {
   return (
     <View
       style={[
-        { flex: 1, height: "100%", width: projectWidth },
-        // justifyContent: "center",
-        index > 0 && columns > 1
-          ? {
-              borderLeftWidth: 5,
-              borderStyle: "dotted",
-              borderColor: "#c094d1",
-            }
-          : { borderWidth: 0 },
+        containerStyles.outerOpenProject,
+        { width: projectWidth },
+
+        // index > 0 && columns > 1
+        //   ? {
+        //       borderLeftWidth: 5,
+        //       borderStyle: "dotted",
+        //       borderColor: "#c094d1",
+        //     }
+        //   : { borderWidth: 0 },
       ]}
       onLayout={(event) => {
         changeNumCounterColumns(event.nativeEvent.layout);
@@ -173,12 +180,14 @@ const OpenProject = (props) => {
 
       <FlatList
         data={countersList}
-        renderItem={({ item }) => <Counter item={item}></Counter>}
+        renderItem={({ item }) => (
+          <Counter availableWidth={counterWidth} item={item}></Counter>
+        )}
         keyExtractor={(item) => item.key.toString()}
         numColumns={numCounterColumns}
         key={item.key.toString() + numCounterColumns.toString()}
         listKey={item.key.toString() + numCounterColumns.toString()}
-        // style={{justifyContent: "center", justifySelf: "center"}}
+        style={styles.openProjectFlatlists}
       ></FlatList>
 
       <FlatList
