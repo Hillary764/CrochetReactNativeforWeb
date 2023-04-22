@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { styles } from "../../styles/styles.js";
 import textStyles from "../../styles/textStyles.js";
+import counterStyles from "./counterStyles.js";
 import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
 import React, { useState, useEffect } from "react";
 import {
@@ -56,22 +57,22 @@ const Counter = ({ item, availableWidth }) => {
   function buildName() {
     if (editMode) {
       return (
-        <View style={containerStyles.container}>
-          <TextInput
-            placeholder={name}
-            value={renameVal}
-            onChangeText={(value) => {
-              setRenameVal(value);
-            }}
-            style={[
-              textStyles.paragraph,
-              { backgroundColor: "#ffffff", borderRadius: 50, width: "95%" },
-            ]}
-          />
-        </View>
+        <TextInput
+          placeholder={name}
+          value={renameVal}
+          onChangeText={(value) => {
+            setRenameVal(value);
+          }}
+          style={[
+            counterStyles.counterTitleEditMode,
+            renameVal === ""
+              ? { color: "rgba(105, 20, 128, 0.25)" }
+              : { color: "#691480" },
+          ]}
+        />
       );
     } else {
-      return <Text style={textStyles.paragraph}>{name} Counter</Text>;
+      return <Text style={counterStyles.counterTitle}>{name}</Text>;
     }
   }
 
@@ -93,8 +94,7 @@ const Counter = ({ item, availableWidth }) => {
     } else {
       return (
         <Text style={[textStyles.paragraph, { width: 50 }]}>
-          {" "}
-          {incrementVal}{" "}
+          {incrementVal}
         </Text>
       );
     }
@@ -202,16 +202,17 @@ const Counter = ({ item, availableWidth }) => {
   return (
     <View
       key={item.key}
-      style={[containerStyles.counterContainer]}
+      style={[counterStyles.counterContainer]}
       //{ maxWidth: availableWidth }
     >
-      <View>{buildName()}</View>
+      <View style={counterStyles.counterTitleContainer}>{buildName()}</View>
       {/* first show the item name */}
-      <Separator></Separator>
-      <View>
+      <Separator />
+      <View style={{ display: "flex", flexDirection: "column" }}>
+        <Text>Current Count:</Text>
         <Text style={textStyles.paragraph}> {item.count}</Text>
       </View>
-      <Separator></Separator>
+      <Separator />
 
       <View style={{ flexDirection: "row" }}>
         {/* inside this view, I am making the increment and decrement buttons */}

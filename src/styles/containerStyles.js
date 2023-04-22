@@ -48,21 +48,6 @@ const containerStyles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
   },
-
-  counterContainer: {
-    alignSelf: "stretch",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 3,
-    borderRadius: 5,
-    // borderColor: "#eabcf7",
-    borderColor: "#e3acf2",
-    // backgroundColor: "#f2d7fa",
-    flex: 1,
-    // marginLeft: 10,
-    // marginRight: 10,
-    margin: 10,
-  },
 });
 
 export default containerStyles;

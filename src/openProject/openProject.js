@@ -176,7 +176,7 @@ const OpenProject = (props) => {
         changeNumCounterColumns(event.nativeEvent.layout);
       }}
     >
-      <Text style={textStyles.projectTitleText}>{name}</Text>
+      <Text style={[textStyles.projectTitleText]}>{name}</Text>
 
       <FlatList
         data={countersList}
