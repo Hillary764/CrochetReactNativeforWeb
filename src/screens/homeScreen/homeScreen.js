@@ -208,12 +208,19 @@ function HomeScreen({ navigation }) {
         //want to see which in new need to be opened
 
         openProjectList.forEach((item, index) => {
-          let possibleIndex = binarySearch(
-            newList,
-            item,
-            0,
-            newList.length - 1
-          );
+          // let possibleIndex = binarySearch(
+          //   newList,
+          //   item,
+          //   0,
+          //   newList.length - 1
+          // );
+          let possibleIndex = false;
+
+          newList.forEach((newItem, newIndex) => {
+            if (item.key === newItem.key) {
+              possibleIndex = newIndex;
+            }
+          });
 
           if (possibleIndex === false) {
             console.error(

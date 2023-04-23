@@ -48,9 +48,10 @@ const counterStyles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#f8e8fc",
     borderRadius: 10,
-    width: "100%",
+    width: "95%",
     fontSize: 18,
     textAlign: "center",
+    alignSelf: "center",
     padding: 10,
   },
 });
