@@ -17,7 +17,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { userContext } from "../../App.js";
-import { Separator } from "./counters.js";
+import { Separator } from "./counters/counters.js";
 import { buttonStyles } from "../../styles/buttonStyles.js";
 import containerStyles from "../../styles/containerStyles.js";
 

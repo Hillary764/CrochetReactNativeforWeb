@@ -8,10 +8,17 @@ import {
   Text,
   View,
 } from "react-native";
-import { styles } from "../../styles/styles.js";
-import textStyles from "../../styles/textStyles.js";
+import { styles } from "../../../styles/styles.js";
+import textStyles from "../../../styles/textStyles.js";
 import counterStyles from "./counterStyles.js";
-import { firebaseConfig, app, auth, firestore } from "../../firebaseSetup.js";
+import counterTextStyles from "./counterTextStyles.js";
+import counterButtonStyles from "./counterButtonStyles.js";
+import {
+  firebaseConfig,
+  app,
+  auth,
+  firestore,
+} from "../../../firebaseSetup.js";
 import React, { useState, useEffect } from "react";
 import {
   setDoc,
@@ -26,14 +33,14 @@ import {
   limit,
   orderBy,
 } from "firebase/firestore";
-import { userContext } from "../../App.js";
+import { userContext } from "../../../App.js";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   SlideInUp,
 } from "react-native-reanimated";
-import { buttonStyles } from "../../styles/buttonStyles.js";
-import containerStyles from "../../styles/containerStyles.js";
+import { buttonStyles } from "../../../styles/buttonStyles.js";
+import containerStyles from "../../../styles/containerStyles.js";
 
 const Separator = () => <Text style={styles.separator}> </Text>;
 
@@ -64,7 +71,7 @@ const Counter = ({ item, availableWidth }) => {
             setRenameVal(value);
           }}
           style={[
-            counterStyles.counterTitleEditMode,
+            counterTextStyles.counterTitleEditMode,
             renameVal === ""
               ? { color: "rgba(105, 20, 128, 0.25)" }
               : { color: "#691480" },
@@ -72,30 +79,55 @@ const Counter = ({ item, availableWidth }) => {
         />
       );
     } else {
-      return <Text style={counterStyles.counterTitle}>{name}</Text>;
+      return <Text style={counterTextStyles.counterTitle}>{name}</Text>;
     }
   }
 
   function buildIncrementer() {
     if (editMode) {
       return (
-        <TextInput
-          placeholder={incrementVal}
-          value={newIncrement}
-          onChangeText={(value) => {
-            setNewIncrement(value);
-          }}
-          style={[
-            textStyles.paragraph,
-            { width: 50, backgroundColor: "#ffffff", borderRadius: 50 },
-          ]}
-        />
+        <>
+          <Text
+            style={[
+              counterTextStyles.counterCount,
+              { marginBottom: 0, fontSize: 22, fontWeight: "normal" },
+            ]}
+          >
+            Increment by:
+          </Text>
+          <TextInput
+            placeholder={incrementVal}
+            value={newIncrement}
+            onChangeText={(value) => {
+              setNewIncrement(value);
+            }}
+            style={[
+              counterTextStyles.counterCountEditMode,
+              newIncrement === ""
+                ? { color: "rgba(105, 20, 128, 0.25)" }
+                : { color: "#691480" },
+              ,
+              { marginTop: 0 },
+              // { width: 50, backgroundColor: "#ffffff", borderRadius: 50 },
+            ]}
+          />
+        </>
       );
     } else {
       return (
-        <Text style={[textStyles.paragraph, { width: 50 }]}>
-          {incrementVal}
-        </Text>
+        <>
+          <Text
+            style={[
+              counterTextStyles.counterCount,
+              { marginBottom: 0, fontSize: 22, fontWeight: "normal" },
+            ]}
+          >
+            Increment by:
+          </Text>
+          <Text style={[counterTextStyles.counterCount, { marginTop: 0 }]}>
+            {incrementVal}
+          </Text>
+        </>
       );
     }
   }
@@ -105,7 +137,7 @@ const Counter = ({ item, availableWidth }) => {
       return (
         <View>
           <TouchableOpacity
-            style={buttonStyles.addCounterButton}
+            style={counterButtonStyles.utilityButtons}
             onPress={() => {
               let updateData = {};
               let weShouldUpdate = false;
@@ -140,29 +172,31 @@ const Counter = ({ item, availableWidth }) => {
               }
             }}
           >
-            <Text style={textStyles.paragraph}>Save</Text>
+            <Text style={counterTextStyles.utilityButtonText}>Save</Text>
           </TouchableOpacity>
 
           <Separator />
           <TouchableOpacity
-            style={buttonStyles.addCounterButton}
+            style={counterButtonStyles.utilityButtons}
             onPress={() => {
               setEditMode(!editMode);
             }}
           >
-            <Text style={textStyles.paragraph}>Finish Edits</Text>
+            <Text style={counterTextStyles.utilityButtonText}>
+              Finish Edits
+            </Text>
           </TouchableOpacity>
         </View>
       );
     } else {
       return (
         <TouchableOpacity
-          style={buttonStyles.addCounterButton}
+          style={counterButtonStyles.utilityButtons}
           onPress={() => {
             setEditMode(!editMode);
           }}
         >
-          <Text style={textStyles.paragraph}>Edit Counter</Text>
+          <Text style={counterTextStyles.utilityButtonText}>Edit Counter</Text>
         </TouchableOpacity>
       );
     }
@@ -208,30 +242,31 @@ const Counter = ({ item, availableWidth }) => {
       <View style={counterStyles.counterTitleContainer}>{buildName()}</View>
       {/* first show the item name */}
       <Separator />
-      <View style={{ display: "flex", flexDirection: "column" }}>
-        <Text>Current Count:</Text>
-        <Text style={textStyles.paragraph}> {item.count}</Text>
-      </View>
-      <Separator />
 
-      <View style={{ flexDirection: "row" }}>
+      <Text style={counterTextStyles.counterSubtitleText}>Current Count:</Text>
+      <Text style={counterTextStyles.counterFullCount}>{item.count}</Text>
+
+      <Separator />
+      {buildIncrementer()}
+      <View style={counterStyles.counterIncrementButtonContainer}>
         {/* inside this view, I am making the increment and decrement buttons */}
+
         <TouchableOpacity
-          style={buttonStyles.incrementButton}
+          style={[counterButtonStyles.incrementButton]}
           onPress={() => {
             incrementCounter("minus");
           }}
         >
-          <Text style={textStyles.minusIncrementText}>-</Text>
+          <Text style={counterTextStyles.minusIncrementText}>-</Text>
         </TouchableOpacity>
-        {buildIncrementer()}
+
         <TouchableOpacity
-          style={buttonStyles.incrementButton}
+          style={[counterButtonStyles.incrementButton]}
           onPress={() => {
             incrementCounter("plus");
           }}
         >
-          <Text style={textStyles.plusIncrementText}>+</Text>
+          <Text style={counterTextStyles.plusIncrementText}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -244,23 +279,23 @@ const Counter = ({ item, availableWidth }) => {
 
       <Separator></Separator>
       <TouchableOpacity
-        style={buttonStyles.addCounterButton}
+        style={counterButtonStyles.utilityButtons}
         onPress={() => {
           zeroOut();
         }}
       >
-        <Text style={textStyles.paragraph}>Reset to 0</Text>
+        <Text style={counterTextStyles.utilityButtonText}>Reset to 0</Text>
       </TouchableOpacity>
 
       {/*Finally, probably want a "delete counter" option*/}
       <Separator />
       <TouchableOpacity
-        style={buttonStyles.addCounterButton}
+        style={counterButtonStyles.utilityButtons}
         onPress={() => {
           deleteCounter();
         }}
       >
-        <Text style={textStyles.paragraph}>Delete Counter</Text>
+        <Text style={counterTextStyles.utilityButtonText}>Delete Counter</Text>
       </TouchableOpacity>
       <Separator />
       <Separator />

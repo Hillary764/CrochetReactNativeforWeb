@@ -19,7 +19,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { userContext } from "../App.js";
-import { Counter, Separator } from "./components/counters.js";
+import { Counter, Separator } from "./components/counters/counters.js";
 import { Note } from "./components/notes.js";
 import { buttonStyles } from "../styles/buttonStyles.js";
 
@@ -115,7 +115,7 @@ const OpenProject = (props) => {
     const { width } = layout;
     console.warn("Width of single project: ", width);
 
-    let numColumnsNeeded = Math.ceil(width / 400);
+    let numColumnsNeeded = Math.ceil(width / 650);
     console.log("project needs ", numColumnsNeeded, " columns?");
 
     setNumCounterColumns(numColumnsNeeded);

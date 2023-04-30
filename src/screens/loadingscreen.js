@@ -17,7 +17,7 @@ import {
 } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Separator } from "../openProject/components/counters.js";
+import { Separator } from "../openProject/components/counters/counters.js";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

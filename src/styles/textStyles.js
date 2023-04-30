@@ -33,20 +33,6 @@ const textStyles = StyleSheet.create({
     boxShadow: "0px 2px 4px rgba(144, 82, 157, 0.3)",
   },
 
-  minusIncrementText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingBottom: 5,
-  },
-
-  plusIncrementText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingBottom: 3,
-  },
-
   sortButtonText: {
     fontSize: 23,
     color: "#5c1a5b",

@@ -60,18 +60,6 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: "#dfc4ff",
     borderRadius: 85,
   },
-  incrementButton: {
-    backgroundColor: "#dbbae8",
-    textAlign: "center",
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    flex: 1,
-    width: 35,
-    height: 35,
-    borderRadius: 50,
-  },
 
   floatingButton: {
     resizeMode: "contain",

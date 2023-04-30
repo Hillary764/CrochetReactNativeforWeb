@@ -29,7 +29,10 @@ import {
   query,
 } from "firebase/firestore";
 import { userContext } from "../../App.js";
-import { Counter, Separator } from "../../openProject/components/counters.js";
+import {
+  Counter,
+  Separator,
+} from "../../openProject/components/counters/counters.js";
 import { OpenProject } from "../../openProject/openProject.js";
 import Animated, {
   useSharedValue,
